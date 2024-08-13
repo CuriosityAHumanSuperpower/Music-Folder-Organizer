@@ -1,6 +1,6 @@
 import csv
 import shutil
-import argparse
+import click
 import logging
 from datetime import datetime
 from typing import Optional, Dict, List
@@ -88,16 +88,15 @@ def process_music_folder(folder_path: Path, output_csv: Path, base_folder: Path,
     if delete_empty:
         delete_empty_folders(folder_path)
 
+@click.command()
+@click.option('--folder_path', type=click.Path(exists=True, file_okay=False, dir_okay=True, path_type=Path), default=Path('.'), help='Path to the folder containing music files.')
+@click.option('--base_folder', type=click.Path(file_okay=False, dir_okay=True, path_type=Path), default=Path('.'), help='Base folder for organizing music files.')
+@click.option('--output_csv', type=click.Path(dir_okay=False, path_type=Path), default=Path(f'musics_{datetime.now().strftime("%Y%m%d")}.csv'), help='Output CSV file name.')
+@click.option('--delete_empty', is_flag=True, help='Delete empty folders after processing.')
+@click.option('--batch_size', type=int, default=100, help='Number of files to process in each batch.')
+def main(folder_path: Path, base_folder: Path, output_csv: Path, delete_empty: bool, batch_size: int):
+    """Main function to process and organize music files."""
+    process_music_folder(folder_path, output_csv, base_folder, delete_empty, batch_size)
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Process and organize music files.\nExample: python music_folder_organizer.py --folder_path /path/to/music --base_folder /path/to/organize --delete_empty"
-    )
-    parser.add_argument('--folder_path', type=Path, default=Path('.'), help='Path to the folder containing music files.')
-    parser.add_argument('--base_folder', type=Path, default=Path('.'), help='Base folder for organizing music files.')
-    parser.add_argument('--output_csv', type=Path, default=Path(f'musics_{datetime.now().strftime("%Y%m%d")}.csv'), help='Output CSV file name.')
-    parser.add_argument('--delete_empty', action='store_true', help='Delete empty folders after processing.')
-    parser.add_argument('--batch_size', type=int, default=100, help='Number of files to process in each batch.')
-
-    args = parser.parse_args()
-
-    process_music_folder(args.folder_path, args.output_csv, args.base_folder, args.delete_empty, args.batch_size)
+    main()
