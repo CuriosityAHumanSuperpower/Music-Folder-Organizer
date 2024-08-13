@@ -57,6 +57,7 @@ def delete_empty_folders(folder_path: Path) -> None:
             dir.rmdir()
             logging.info(f"Deleted empty folder: {dir}")
 
+@print_errors
 def process_batch(files: List[Path], writer: csv.writer, base_folder: Path) -> None:
     """Process a batch of files."""
     for file_path in files:
@@ -65,6 +66,7 @@ def process_batch(files: List[Path], writer: csv.writer, base_folder: Path) -> N
             new_path = move_music_file(file_path, info, base_folder)
             writer.writerow([info['name'], info['artists'], info['main_artist'], info['year'], info['album'], new_path])
 
+@print_errors
 def process_music_folder(folder_path: Path, output_csv: Path, base_folder: Path, delete_empty: bool, batch_size: int = 100) -> None:
     """Process music files in the given folder and organize them."""
     with output_csv.open(mode='a', newline='', encoding='utf-8') as file:
