@@ -60,6 +60,8 @@ def delete_empty_folders(folder_path: Path) -> None:
     """Delete empty folders in the given directory."""
     sorted_paths = sorted(folder_path.rglob('*'), key=lambda p: len(str(p)), reverse=True)
     for dir in tqdm(sorted_paths, desc="Deleting empty folders"):
+        if (dir / 'cover.jpg').exists() : 
+            (dir / 'cover.jpg').unlink()
         if dir.is_dir() and not any(dir.iterdir()):
             dir.rmdir()
 #            logging.info(f"Deleted empty folder: {dir}")
