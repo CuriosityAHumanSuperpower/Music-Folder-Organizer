@@ -61,7 +61,7 @@ def delete_empty_folders(folder_path: Path) -> None:
     for dir in tqdm(folder_path.rglob('*'), desc="Deleting empty folders"):
         if dir.is_dir() and not any(dir.iterdir()):
             dir.rmdir()
-            logging.info(f"Deleted empty folder: {dir}")
+#            logging.info(f"Deleted empty folder: {dir}")
 
 @print_errors
 def process_batch(files: List[Path], writer: csv.writer, base_folder: Path) -> None:
