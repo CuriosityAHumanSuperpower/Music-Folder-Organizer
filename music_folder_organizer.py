@@ -7,6 +7,7 @@ from typing import Optional, Dict, List
 from mutagen.easyid3 import EasyID3
 from pathlib import Path
 from tqdm import tqdm
+import re
 
 # Define the music file extensions
 MUSIC_EXTENSIONS = ('.mp3', '.flac', '.wav', '.m4a')
@@ -22,6 +23,10 @@ def print_errors(func):
             logging.error(f"Error in {func.__name__}: {e}")
             return None
     return wrapper
+
+def sanitize_folder_name(name: str) -> str:
+    """Sanitize folder name by removing forbidden characters using regex."""
+    return re.sub(r'[<>:"/\\|?*]', '', name)
 
 @print_errors
 def get_music_info(file_path: Path) -> Optional[Dict[str, str]]:
@@ -42,6 +47,7 @@ def move_music_file(file_path: Path, info: Dict[str, str], base_folder: Path) ->
     first_letter = main_artist[0].upper() if main_artist != 'Unknown' else 'Unknown'
     album = info['album'] if info['album'] else 'Unknown'
     
+    album = sanitize_folder_name (album)
     new_folder = base_folder / first_letter / main_artist / album
     new_folder.mkdir(parents=True, exist_ok=True)
     
