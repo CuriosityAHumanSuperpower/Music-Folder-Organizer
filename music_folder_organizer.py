@@ -58,7 +58,7 @@ def move_music_file(file_path: Path, info: Dict[str, str], base_folder: Path) ->
 @print_errors
 def delete_empty_folders(folder_path: Path) -> None:
     """Delete empty folders in the given directory."""
-    for dir in folder_path.rglob('*'):
+    for dir in tqdm(folder_path.rglob('*'), desc="Deleting empty folders"):
         if dir.is_dir() and not any(dir.iterdir()):
             dir.rmdir()
             logging.info(f"Deleted empty folder: {dir}")
