@@ -20,7 +20,7 @@ def print_errors(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            logging.error(f"Error in {func.__name__}: {e}")
+            logging.error(f"Error :\n\tfunction :{func.__name__}\n\targs : {args}\n\terror message : {e}\n")
             return None
     return wrapper
 
@@ -40,15 +40,25 @@ def get_music_info(file_path: Path) -> Optional[Dict[str, str]]:
         'album': audio.get('album', ['Unknown'])[0]
     }
 
+def set_root_folder(main_artist: str) -> str : 
+    if main_artist and main_artist != 'Unknown':
+        if main_artist[0].isalpha():
+            return main_artist[0].upper()
+        elif main_artist[0].isdigit():
+            return '#'
+        else:
+            return 'Unknown'
+    return 'Unknown'
+
 @print_errors
 def move_music_file(file_path: Path, info: Dict[str, str], base_folder: Path) -> Optional[Path]:
     """Move music file to a new directory structure based on metadata."""
     main_artist = info['main_artist'] if info['main_artist'] else 'Unknown'
-    first_letter = main_artist[0].upper() if main_artist != 'Unknown' else 'Unknown'
+    root_folder = set_root_folder(main_artist)
     album = info['album'] if info['album'] else 'Unknown'
     
     album = sanitize_folder_name (album)
-    new_folder = base_folder / first_letter / main_artist / album
+    new_folder = base_folder / root_folder / main_artist / album
     new_folder.mkdir(parents=True, exist_ok=True)
     
     new_path = new_folder / file_path.name
