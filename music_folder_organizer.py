@@ -57,7 +57,7 @@ def move_music_file(file_path: Path, info: Dict[str, str], base_folder: Path) ->
 
 @print_errors
 def delete_empty_folders(folder_path: Path) -> None:
-    """Delete empty folders in the given directory."""
+    """Delete empty folders in the given directory. If it contains cover.jpg also delete."""
     sorted_paths = sorted(folder_path.rglob('*'), key=lambda p: len(str(p)), reverse=True)
     for dir in tqdm(sorted_paths, desc="Deleting empty folders"):
         if (dir / 'cover.jpg').exists() : 
