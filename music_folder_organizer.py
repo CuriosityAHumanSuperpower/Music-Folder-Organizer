@@ -88,23 +88,23 @@ def process_batch(files: List[Path], writer: csv.writer, base_folder: Path) -> N
 @print_errors
 def process_music_folder(folder_path: Path, output_csv: Path, base_folder: Path, delete_empty: bool, batch_size: int = 100) -> None:
     """Process music files in the given folder and organize them."""
-    with output_csv.open(mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Name', 'Artists', 'Main Artist', 'Year', 'Album', 'New Path'])
+    # with output_csv.open(mode='a', newline='', encoding='utf-8') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(['Name', 'Artists', 'Main Artist', 'Year', 'Album', 'New Path'])
 
-        batch, batch_count = [], 0
-        files = list(folder_path.rglob('*'))
-        for file_path in tqdm(files, desc="Processing files"):
-            if file_path.suffix in MUSIC_EXTENSIONS:
-                batch.append(file_path)
-                batch_count += 1
-                if batch_count >= batch_size:
-                    process_batch(batch, writer, base_folder)
-                    batch, batch_count = [], 0
+    #     batch, batch_count = [], 0
+    #     files = list(folder_path.rglob('*'))
+    #     for file_path in tqdm(files, desc="Processing files"):
+    #         if file_path.suffix in MUSIC_EXTENSIONS:
+    #             batch.append(file_path)
+    #             batch_count += 1
+    #             if batch_count >= batch_size:
+    #                 process_batch(batch, writer, base_folder)
+    #                 batch, batch_count = [], 0
 
-        # Process any remaining files in the last batch
-        if batch:
-            process_batch(batch, writer, base_folder)
+    #     # Process any remaining files in the last batch
+    #     if batch:
+    #         process_batch(batch, writer, base_folder)
 
     if delete_empty:
         delete_empty_folders(folder_path)
